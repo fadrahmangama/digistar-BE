@@ -1,10 +1,9 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 app.use(express.json());
 
 let todos = [];
 
-// Fungsi untuk validasi input
 const validateTodoInput = (description, date) => {
   if (!description || !date) {
     return false;
@@ -12,17 +11,15 @@ const validateTodoInput = (description, date) => {
   return true;
 };
 
-// GET /todos: Menampilkan semua todo
-app.get('/todos', (req, res) => {
+app.get("/todos", (req, res) => {
   res.json(todos);
 });
 
-// POST /todos: Membuat todo baru
-app.post('/todos', (req, res) => {
+app.post("/todos", (req, res) => {
   const { description, date } = req.body;
 
   if (!validateTodoInput(description, date)) {
-    return res.status(400).json({ message: 'Invalid input' });
+    return res.status(400).json({ message: "Invalid input" });
   }
 
   const newTodo = {
@@ -36,19 +33,18 @@ app.post('/todos', (req, res) => {
   res.status(201).json(newTodo);
 });
 
-// PUT /todos/:id: Mengupdate todo berdasarkan id
-app.put('/todos/:id', (req, res) => {
+app.put("/todos/:id", (req, res) => {
   const { id } = req.params;
   const { description, date } = req.body;
 
   if (!validateTodoInput(description, date)) {
-    return res.status(400).json({ message: 'Invalid input' });
+    return res.status(400).json({ message: "Invalid input" });
   }
 
   const todo = todos.find((t) => t.id === id);
 
   if (!todo) {
-    return res.status(404).json({ message: 'Todo not found' });
+    return res.status(404).json({ message: "Todo not found" });
   }
 
   todo.description = description;
@@ -57,28 +53,26 @@ app.put('/todos/:id', (req, res) => {
   res.json(todo);
 });
 
-// DELETE /todos/:id: Menghapus todo berdasarkan id
-app.delete('/todos/:id', (req, res) => {
+app.delete("/todos/:id", (req, res) => {
   const { id } = req.params;
 
   const todoIndex = todos.findIndex((t) => t.id === id);
 
   if (todoIndex === -1) {
-    return res.status(404).json({ message: 'Todo not found' });
+    return res.status(404).json({ message: "Todo not found" });
   }
 
   todos.splice(todoIndex, 1);
   res.status(204).send();
 });
 
-// PATCH /todos/:id/toggle: Mengubah status is_checked todo
-app.patch('/todos/:id/toggle', (req, res) => {
+app.patch("/todos/:id/toggle", (req, res) => {
   const { id } = req.params;
 
   const todo = todos.find((t) => t.id === id);
 
   if (!todo) {
-    return res.status(404).json({ message: 'Todo not found' });
+    return res.status(404).json({ message: "Todo not found" });
   }
 
   todo.is_checked = !todo.is_checked;
@@ -86,7 +80,6 @@ app.patch('/todos/:id/toggle', (req, res) => {
   res.json(todo);
 });
 
-// Menjalankan server pada port 3000
 app.listen(3000, () => {
-  console.log('Server running on port 3000');
+  console.log("Server running on port 3000");
 });
